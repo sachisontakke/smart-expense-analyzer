@@ -1,11 +1,8 @@
-"""
-db.py — PostgreSQL connection and schema initialization
-"""
-
 import psycopg2
 import os
 
-# Update these with your PostgreSQL credentials
+DATABASE_URL = os.getenv("DATABASE_URL")
+
 DB_CONFIG = {
     "host": os.getenv("DB_HOST", "localhost"),
     "database": os.getenv("DB_NAME", "expense_analyzer"),
@@ -15,15 +12,13 @@ DB_CONFIG = {
 }
 
 def get_connection():
-    """Return a new PostgreSQL connection."""
+    if DATABASE_URL:
+        return psycopg2.connect(DATABASE_URL, sslmode='require')
     return psycopg2.connect(**DB_CONFIG)
 
-
 def init_db():
-    """Create tables if they don't exist."""
     conn = get_connection()
     cursor = conn.cursor()
-
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS transactions (
             id SERIAL PRIMARY KEY,
@@ -34,11 +29,6 @@ def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     """)
-
-    cursor.execute("""
-        CREATE INDEX IF NOT EXISTS idx_category ON transactions(category);
-    """)
-
     conn.commit()
     cursor.close()
     conn.close()
