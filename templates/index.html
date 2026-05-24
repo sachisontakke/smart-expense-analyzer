@@ -3,407 +3,717 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Expense Analyzer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <title>SpendSmart — Know Your Money</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cabinet+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #F7F5F0;
+      --ink: #0D0D0D;
+      --paper: #FAFAF7;
+      --lime: #C8F135;
+      --lime-dark: #A8D010;
+      --coral: #FF5C3A;
+      --sky: #3B82F6;
+      --violet: #7C3AED;
+      --gold: #F59E0B;
+      --mint: #10B981;
+      --pink: #EC4899;
       --surface: #FFFFFF;
-      --border: #E2DDD6;
-      --text: #1A1714;
-      --muted: #7A7570;
-      --accent: #2D6A4F;
-      --accent-light: #EAF3DE;
-      --accent-mid: #52B788;
-      --warn: #E76F51;
-      --warn-light: #FAECE7;
-      --blue: #185FA5;
-      --blue-light: #E6F1FB;
-      --amber: #BA7517;
-      --amber-light: #FAEEDA;
-      --purple: #534AB7;
-      --purple-light: #EEEDFE;
-      --radius: 14px;
-      --radius-sm: 8px;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --radius: 20px;
+      --radius-sm: 12px;
     }
+
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
+      font-family: 'Cabinet Grotesk', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      overflow-x: hidden;
     }
 
-    /* NAV */
+    /* ===== NAV ===== */
     nav {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(250,250,247,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
     }
-    .nav-brand {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-weight: 900;
+      display: flex; align-items: center; gap: 8px;
     }
-    .nav-brand span { color: var(--text); }
-    .nav-badge {
-      background: var(--accent-light);
-      color: var(--accent);
-      font-size: 11px;
-      font-weight: 500;
-      padding: 3px 8px;
-      border-radius: 20px;
+    .nav-logo .dot { color: var(--coral); }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a {
+      text-decoration: none; color: var(--ink);
+      font-size: 0.9rem; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--coral); }
+    .nav-cta {
+      background: var(--ink); color: var(--lime) !important;
+      padding: 0.5rem 1.25rem; border-radius: 50px;
+      font-weight: 700 !important;
+    }
+    .nav-cta:hover { background: var(--coral); color: white !important; }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 7rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
     }
 
-    /* LAYOUT */
-    .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
-
-    .page-header { margin-bottom: 2rem; }
-    .page-header h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: 2rem;
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 0.4rem;
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 50%, rgba(200,241,53,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 80% 30%, rgba(255,92,58,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 60% 80%, rgba(124,58,237,0.1) 0%, transparent 70%);
     }
-    .page-header p { color: var(--muted); font-size: 0.95rem; }
 
-    /* UPLOAD ZONE */
-    .upload-section {
-      background: var(--surface);
-      border: 1px solid var(--border);
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--ink); color: var(--lime);
+      padding: 0.4rem 1rem; border-radius: 50px;
+      font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      animation: fadeDown 0.6s ease both;
+    }
+    .hero-badge span { width: 6px; height: 6px; background: var(--lime); border-radius: 50%; animation: pulse 1.5s infinite; }
+
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 900;
+      line-height: 1.05;
+      text-align: center;
+      max-width: 900px;
+      margin-bottom: 1.5rem;
+      position: relative; z-index: 1;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+    .hero h1 .highlight {
+      position: relative; display: inline-block;
+      color: var(--coral);
+    }
+    .hero h1 .highlight::after {
+      content: '';
+      position: absolute; bottom: 4px; left: 0; right: 0;
+      height: 6px; background: var(--lime); border-radius: 3px;
+      z-index: -1;
+    }
+
+    .hero-sub {
+      font-size: 1.15rem; color: var(--muted);
+      text-align: center; max-width: 560px;
+      line-height: 1.6; margin-bottom: 2.5rem;
+      position: relative; z-index: 1;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .hero-actions {
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+      margin-bottom: 4rem;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--ink); color: var(--lime);
+      padding: 0.9rem 2rem; border-radius: 50px;
+      font-size: 1rem; font-weight: 700; text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 4px 4px 0 var(--coral);
+      cursor: pointer; border: none;
+    }
+    .btn-primary:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--coral); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--ink);
+      padding: 0.9rem 2rem; border-radius: 50px;
+      font-size: 1rem; font-weight: 700; text-decoration: none;
+      border: 2px solid var(--ink);
+      transition: all 0.2s; cursor: pointer;
+    }
+    .btn-secondary:hover { background: var(--ink); color: var(--lime); }
+
+    /* FLOATING CARDS */
+    .hero-floats {
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+      animation: fadeUp 0.7s 0.4s ease both;
+    }
+    .float-card {
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1.25rem;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.85rem; font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .float-card .icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+
+    /* ===== STATS TICKER ===== */
+    .ticker {
+      background: var(--ink); color: var(--lime);
+      padding: 0.75rem 0; overflow: hidden;
+      white-space: nowrap;
+    }
+    .ticker-inner {
+      display: inline-flex; gap: 3rem;
+      animation: ticker 20s linear infinite;
+    }
+    .ticker-item { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; }
+    .ticker-item span { color: var(--coral); margin-right: 0.5rem; }
+    @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ===== FEATURES ===== */
+    .features {
+      padding: 6rem 2rem;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .section-tag {
+      display: inline-block;
+      background: var(--lime); color: var(--ink);
+      padding: 0.3rem 0.9rem; border-radius: 50px;
+      font-size: 0.78rem; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900; line-height: 1.1;
+      margin-bottom: 3rem;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
       border-radius: var(--radius);
       padding: 2rem;
-      margin-bottom: 2rem;
+      border: 1.5px solid var(--border);
+      background: white;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative; overflow: hidden;
     }
-    .upload-zone {
-      border: 2px dashed var(--border);
-      border-radius: var(--radius-sm);
-      padding: 2.5rem 1.5rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
+    .feature-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+    .feature-card.accent-lime { background: var(--lime); border-color: var(--lime); }
+    .feature-card.accent-coral { background: var(--coral); border-color: var(--coral); color: white; }
+    .feature-card.accent-violet { background: var(--violet); border-color: var(--violet); color: white; }
+    .feat-icon {
+      font-size: 2rem; margin-bottom: 1rem;
+      width: 56px; height: 56px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.08);
     }
-    .upload-zone:hover, .upload-zone.dragover {
-      border-color: var(--accent-mid);
-      background: var(--accent-light);
-    }
-    .upload-zone input[type="file"] {
-      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
-    }
-    .upload-icon {
-      font-size: 2.5rem;
-      margin-bottom: 0.75rem;
-    }
-    .upload-zone h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-    }
-    .upload-zone p { color: var(--muted); font-size: 0.85rem; }
-
-    .upload-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: var(--radius-sm);
-      padding: 0.65rem 1.4rem;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      margin-top: 1.2rem;
-      transition: opacity 0.2s;
-    }
-    .upload-btn:hover { opacity: 0.88; }
-    .upload-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* STATUS MESSAGES */
-    .status-msg {
-      margin-top: 1rem;
-      padding: 0.75rem 1rem;
-      border-radius: var(--radius-sm);
-      font-size: 0.88rem;
-      display: none;
-    }
-    .status-msg.success { background: var(--accent-light); color: var(--accent); display: block; }
-    .status-msg.error { background: var(--warn-light); color: var(--warn); display: block; }
-    .status-msg.loading { background: var(--blue-light); color: var(--blue); display: block; }
-
-    /* STATS GRID */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem 1.5rem;
-    }
-    .stat-label {
-      font-size: 0.78rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+    .accent-lime .feat-icon { background: rgba(0,0,0,0.1); }
+    .feature-card h3 {
+      font-size: 1.1rem; font-weight: 800;
       margin-bottom: 0.5rem;
     }
-    .stat-value {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--text);
+    .feature-card p {
+      font-size: 0.9rem; line-height: 1.6;
+      opacity: 0.75;
     }
-    .stat-sub { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
+    .accent-lime p, .accent-coral p, .accent-violet p { opacity: 0.85; }
 
-    /* MAIN CONTENT GRID */
-    .content-grid {
+    /* ===== HOW IT WORKS ===== */
+    .how {
+      padding: 6rem 2rem;
+      background: var(--ink);
+      color: white;
+    }
+    .how-inner { max-width: 1200px; margin: 0 auto; }
+    .how .section-tag { background: var(--lime); }
+    .how .section-title { color: white; }
+    .steps-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
     }
-    @media (max-width: 750px) { .content-grid { grid-template-columns: 1fr; } }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+    .step {
+      position: relative;
+    }
+    .step-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem; font-weight: 900;
+      color: rgba(255,255,255,0.08);
+      line-height: 1;
+      margin-bottom: -1.5rem;
+    }
+    .step-body {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
       border-radius: var(--radius);
       padding: 1.5rem;
     }
-    .card-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .step-icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
+    .step-body h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .step-body p { font-size: 0.85rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+    /* ===== UPLOAD SECTION ===== */
+    .upload-section {
+      padding: 6rem 2rem;
+      max-width: 800px; margin: 0 auto;
+      text-align: center;
+    }
+    .upload-card {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 28px;
+      padding: 3rem 2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+    }
+    .upload-zone {
+      border: 2.5px dashed #D1D5DB;
+      border-radius: var(--radius);
+      padding: 3rem 2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--paper);
+      margin-bottom: 1.5rem;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--coral);
+      background: #FFF5F3;
+    }
+    .upload-zone .big-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+    .upload-zone h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .upload-zone p { color: var(--muted); font-size: 0.9rem; }
+    .selected-file {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #F0FDF4; color: var(--mint);
+      border: 1.5px solid #BBF7D0;
+      padding: 0.4rem 1rem; border-radius: 50px;
+      font-size: 0.85rem; font-weight: 600;
+      margin-top: 0.75rem;
+    }
+
+    .analyze-btn {
+      width: 100%;
+      background: var(--coral);
+      color: white;
+      border: none;
+      padding: 1.1rem 2rem;
+      border-radius: 50px;
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 1.1rem; font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 8px 24px rgba(255,92,58,0.3);
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .analyze-btn:hover { background: #E04020; transform: translateY(-2px); box-shadow: 0 12px 30px rgba(255,92,58,0.4); }
+    .analyze-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .status-msg {
+      margin-top: 1rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem; font-weight: 500;
+      display: none;
+    }
+    .status-msg.success { background: #F0FDF4; color: var(--mint); display: block; border: 1px solid #BBF7D0; }
+    .status-msg.error { background: #FEF2F2; color: #EF4444; display: block; border: 1px solid #FECACA; }
+    .status-msg.loading { background: #EFF6FF; color: var(--sky); display: block; border: 1px solid #BFDBFE; }
+
+    /* ===== DASHBOARD ===== */
+    .dashboard { padding: 0 2rem 6rem; max-width: 1200px; margin: 0 auto; display: none; }
+
+    .dash-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
+    }
+    .dash-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 900;
+    }
+    .dash-tag {
+      background: var(--lime); color: var(--ink);
+      padding: 0.4rem 1rem; border-radius: 50px;
+      font-size: 0.8rem; font-weight: 800;
+    }
+
+    /* STAT CARDS */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem; margin-bottom: 2rem;
+    }
+    .stat-card {
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      position: relative; overflow: hidden;
+    }
+    .stat-card.s1 { background: var(--ink); color: white; }
+    .stat-card.s2 { background: var(--coral); color: white; }
+    .stat-card.s3 { background: var(--lime); color: var(--ink); }
+    .stat-card.s4 { background: var(--violet); color: white; }
+    .stat-label {
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      opacity: 0.7; margin-bottom: 0.5rem;
+    }
+    .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 900; line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .stat-sub { font-size: 0.8rem; opacity: 0.7; }
+    .stat-bg-icon {
+      position: absolute; right: 1rem; bottom: 0.5rem;
+      font-size: 4rem; opacity: 0.1;
+    }
+
+    /* CHARTS ROW */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem; margin-bottom: 2rem;
+    }
+    @media (max-width: 700px) { .charts-row { grid-template-columns: 1fr; } }
+
+    .chart-card {
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+    }
+    .chart-title {
+      font-size: 0.95rem; font-weight: 800;
+      margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .chart-title .dot {
+      width: 10px; height: 10px; border-radius: 50%;
     }
 
     /* CATEGORY BARS */
-    .category-bar { margin-bottom: 1rem; }
-    .cat-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-    }
-    .cat-name {
-      font-size: 0.85rem;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .cat-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .cat-amount { font-size: 0.85rem; color: var(--muted); }
-    .bar-track {
-      height: 6px;
-      background: var(--bg);
-      border-radius: 20px;
-      overflow: hidden;
-    }
-    .bar-fill {
-      height: 100%;
-      border-radius: 20px;
-      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    .cat-item { margin-bottom: 1rem; }
+    .cat-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .cat-name { font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .cat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .cat-amt { font-size: 0.85rem; font-weight: 700; color: var(--muted); }
+    .bar-track { height: 8px; background: #F3F4F6; border-radius: 20px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 20px; transition: width 1s cubic-bezier(0.4,0,0.2,1); }
 
-    /* TRANSACTIONS TABLE */
-    .transactions-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+    #donutCanvas { max-width: 220px; max-height: 220px; margin: 0 auto; display: block; }
+
+    /* TRANSACTIONS */
+    .tx-card {
+      background: white;
+      border: 1.5px solid var(--border);
       border-radius: var(--radius);
       overflow: hidden;
-      margin-bottom: 2rem;
     }
-    .transactions-header {
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .tx-header {
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1.5px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--ink); color: white;
     }
-    .transactions-header h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
+    .tx-header h3 { font-size: 1rem; font-weight: 800; }
     .filter-select {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0.4rem 0.75rem;
-      font-size: 0.82rem;
-      font-family: 'DM Sans', sans-serif;
-      background: var(--surface);
-      color: var(--text);
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white; border-radius: 50px;
+      padding: 0.4rem 0.9rem; font-size: 0.82rem;
+      font-family: 'Cabinet Grotesk', sans-serif;
       cursor: pointer;
     }
+    .filter-select option { background: var(--ink); }
     table { width: 100%; border-collapse: collapse; }
     thead th {
-      padding: 0.75rem 1.5rem;
-      text-align: left;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg);
+      padding: 0.75rem 1.75rem;
+      text-align: left; font-size: 0.75rem;
+      font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      border-bottom: 1.5px solid var(--border);
+      background: #FAFAFA;
     }
-    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+    tbody tr { border-bottom: 1px solid #F3F4F6; transition: background 0.1s; }
     tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: var(--bg); }
-    td { padding: 0.85rem 1.5rem; font-size: 0.875rem; }
-    .td-desc { font-weight: 500; max-width: 240px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    tbody tr:hover { background: #FFFBF9; }
+    td { padding: 0.9rem 1.75rem; font-size: 0.875rem; }
+    .td-desc { font-weight: 600; max-width: 240px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .td-date { color: var(--muted); font-size: 0.8rem; }
-    .td-amount { font-weight: 600; color: var(--warn); }
+    .td-amount { font-weight: 800; color: var(--coral); font-size: 0.95rem; }
     .badge {
       display: inline-block;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 500;
+      padding: 3px 12px; border-radius: 50px;
+      font-size: 0.75rem; font-weight: 700;
     }
 
-    /* EMPTY STATE */
+    /* EMPTY */
     .empty-state {
-      text-align: center;
-      padding: 4rem 2rem;
-      color: var(--muted);
+      text-align: center; padding: 4rem 2rem; color: var(--muted);
     }
-    .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
-    .empty-state h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1rem;
-      color: var(--text);
-      margin-bottom: 0.4rem;
-    }
+    .empty-state .e-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .empty-state h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ink); margin-bottom: 0.4rem; }
 
     /* SPINNER */
     .spinner {
-      display: inline-block;
-      width: 16px; height: 16px;
-      border: 2px solid currentColor;
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
+      display: inline-block; width: 18px; height: 18px;
+      border: 2px solid currentColor; border-top-color: transparent;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spin { to{transform:rotate(360deg)} }
 
-    /* CHART CANVAS */
-    #donutCanvas { max-width: 200px; max-height: 200px; margin: 0 auto; display: block; }
-
-    /* EMPTY PLACEHOLDER */
-    .placeholder-chart {
-      height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--muted);
+    /* FOOTER */
+    footer {
+      background: var(--ink); color: rgba(255,255,255,0.5);
+      text-align: center; padding: 2rem;
       font-size: 0.85rem;
-      border: 1px dashed var(--border);
-      border-radius: var(--radius-sm);
+    }
+    footer strong { color: var(--lime); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      nav { padding: 1rem; }
+      .nav-links { display: none; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
-  <div class="nav-brand">💰 <span>Smart Expense</span> Analyzer</div>
-  <span class="nav-badge">Week 1 — Core App</span>
+  <div class="nav-logo">Spend<span class="dot">Smart</span></div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How it Works</a>
+    <a href="#analyze" class="nav-cta">Analyze Now →</a>
+  </div>
 </nav>
 
-<div class="container">
-  <div class="page-header">
-    <h1>Your Money, Understood.</h1>
-    <p>Upload your bank statement CSV — we'll parse, categorize, and visualize your spending instantly.</p>
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-badge"><span></span> AI-Powered Expense Intelligence</div>
+  <h1>Stop Wondering Where Your <span class="highlight">Money Goes</span></h1>
+  <p class="hero-sub">Upload your bank statement and get instant insights — spending patterns, category breakdowns, and smart analysis. Built for Indian users.</p>
+  <div class="hero-actions">
+    <a href="#analyze" class="btn-primary">🚀 Analyze My Expenses</a>
+    <a href="#how" class="btn-secondary">See How It Works</a>
   </div>
+  <div class="hero-floats">
+    <div class="float-card"><div class="icon" style="background:#FEF3C7">📊</div> Smart Categorization</div>
+    <div class="float-card"><div class="icon" style="background:#FCE7F3">💡</div> Spending Insights</div>
+    <div class="float-card"><div class="icon" style="background:#ECFDF5">🔒</div> 100% Private</div>
+    <div class="float-card"><div class="icon" style="background:#EFF6FF">⚡</div> Instant Results</div>
+  </div>
+</section>
 
-  <!-- UPLOAD SECTION -->
-  <div class="upload-section">
-    <div class="upload-zone" id="uploadZone">
-      <input type="file" id="fileInput" accept=".csv" />
-      <div class="upload-icon">📂</div>
-      <h3 id="uploadLabel">Drop your bank statement CSV here</h3>
-      <p>or click to browse — supports most Indian bank exports</p>
-      <button class="upload-btn" id="uploadBtn" onclick="handleUpload(event)">
-        <span id="btnText">Analyze Statement</span>
-      </button>
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item"><span>★</span> FOOD & DINING</span>
+    <span class="ticker-item"><span>★</span> TRANSPORT</span>
+    <span class="ticker-item"><span>★</span> SHOPPING</span>
+    <span class="ticker-item"><span>★</span> EDUCATION</span>
+    <span class="ticker-item"><span>★</span> HEALTH</span>
+    <span class="ticker-item"><span>★</span> ENTERTAINMENT</span>
+    <span class="ticker-item"><span>★</span> UTILITIES</span>
+    <span class="ticker-item"><span>★</span> GROCERIES</span>
+    <span class="ticker-item"><span>★</span> RENT</span>
+    <span class="ticker-item"><span>★</span> FOOD & DINING</span>
+    <span class="ticker-item"><span>★</span> TRANSPORT</span>
+    <span class="ticker-item"><span>★</span> SHOPPING</span>
+    <span class="ticker-item"><span>★</span> EDUCATION</span>
+    <span class="ticker-item"><span>★</span> HEALTH</span>
+    <span class="ticker-item"><span>★</span> ENTERTAINMENT</span>
+    <span class="ticker-item"><span>★</span> UTILITIES</span>
+    <span class="ticker-item"><span>★</span> GROCERIES</span>
+    <span class="ticker-item"><span>★</span> RENT</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-tag">✦ Features</div>
+  <h2 class="section-title">Everything you need to<br>understand your spending</h2>
+  <div class="features-grid">
+    <div class="feature-card accent-lime">
+      <div class="feat-icon">🎯</div>
+      <h3>Auto-Categorization</h3>
+      <p>Zomato, Uber, Amazon, Airtel — we recognize 100+ Indian apps and services automatically across 10 spending categories.</p>
     </div>
+    <div class="feature-card">
+      <div class="feat-icon" style="background:#FEF3C7">📈</div>
+      <h3>Visual Breakdown</h3>
+      <p>Beautiful donut charts and bar graphs show exactly where your money is going at a glance.</p>
+    </div>
+    <div class="feature-card accent-coral">
+      <div class="feat-icon">⚡</div>
+      <h3>Instant Analysis</h3>
+      <p>Upload your CSV and get a complete financial snapshot in seconds. No waiting, no processing delays.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon" style="background:#EDE9FE">🔍</div>
+      <h3>Filter & Search</h3>
+      <p>Drill down into specific categories. Filter by Food, Transport, Shopping and see detailed transaction lists.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon" style="background:#ECFDF5">🏦</div>
+      <h3>All Indian Banks</h3>
+      <p>Works with SBI, HDFC, ICICI, Kotak, Axis and most Indian bank CSV exports with flexible column detection.</p>
+    </div>
+    <div class="feature-card accent-violet">
+      <div class="feat-icon">🔒</div>
+      <h3>Fully Private</h3>
+      <p>Your data stays on your device. No cloud upload, no third parties — complete financial privacy guaranteed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="how-inner">
+    <div class="section-tag">✦ Process</div>
+    <h2 class="section-title">Three steps to financial clarity</h2>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <div class="step-icon">🏦</div>
+          <h3>Export from your Bank</h3>
+          <p>Log into your bank's app or website and download your statement as a CSV file. All major Indian banks support this.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <div class="step-icon">📤</div>
+          <h3>Upload to SpendSmart</h3>
+          <p>Drag and drop your CSV file or click to browse. We'll instantly detect the format and read your transactions.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <div class="step-icon">✨</div>
+          <h3>Get Instant Insights</h3>
+          <p>See your spending by category, total amounts, top expenses, and a beautiful visual dashboard — instantly.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <div class="step-icon">🎯</div>
+          <h3>Take Control</h3>
+          <p>Filter by category, spot overspending patterns, and make smarter decisions about where your money goes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UPLOAD / ANALYZE -->
+<section class="upload-section" id="analyze">
+  <div class="section-tag">✦ Get Started</div>
+  <h2 class="section-title" style="margin-bottom:0.5rem;">Analyze your expenses<br>right now</h2>
+  <p style="color:var(--muted);margin-bottom:2rem;">Upload your bank statement CSV and see your dashboard in seconds</p>
+
+  <div class="upload-card">
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <input type="file" id="fileInput" accept=".csv" style="display:none;" />
+      <div class="big-icon">📂</div>
+      <h3 id="uploadLabel">Click to select your CSV file</h3>
+      <p>Drag & drop also works — supports all Indian bank formats</p>
+      <div id="selectedFile" style="display:none;" class="selected-file">✅ <span id="fileName"></span></div>
+    </div>
+
+    <button class="analyze-btn" id="uploadBtn" onclick="handleUpload(event)">
+      <span id="btnText">🚀 Analyze My Expenses</span>
+    </button>
+
     <div class="status-msg" id="statusMsg"></div>
-    <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--muted);">
-      💡 No real bank CSV? Download our <a href="/sample" style="color: var(--accent); text-decoration: none; font-weight: 500;" onclick="downloadSample(event)">sample file</a> to test the app.
+
+    <p style="margin-top:1.25rem;font-size:0.82rem;color:var(--muted);">
+      🧪 No bank CSV? <a href="#" onclick="downloadSample(event)" style="color:var(--coral);font-weight:700;text-decoration:none;">Download sample file</a> to test the app
     </p>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+  <div class="dash-header">
+    <div class="dash-title">Your Expense Dashboard</div>
+    <div class="dash-tag" id="dashTag">0 transactions</div>
   </div>
 
   <!-- STATS -->
-  <div class="stats-grid" id="statsGrid" style="display: none;">
-    <div class="stat-card">
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card s1">
       <div class="stat-label">Total Spent</div>
       <div class="stat-value" id="statTotal">₹0</div>
-      <div class="stat-sub" id="statPeriod">this period</div>
+      <div class="stat-sub">this period</div>
+      <div class="stat-bg-icon">💰</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card s2">
       <div class="stat-label">Transactions</div>
       <div class="stat-value" id="statCount">0</div>
-      <div class="stat-sub">entries processed</div>
+      <div class="stat-sub">entries found</div>
+      <div class="stat-bg-icon">📋</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card s3">
       <div class="stat-label">Top Category</div>
-      <div class="stat-value" id="statTopCat" style="font-size: 1.1rem;">—</div>
-      <div class="stat-sub" id="statTopAmt">highest spend area</div>
+      <div class="stat-value" id="statTopCat" style="font-size:1.1rem;margin-top:0.3rem;">—</div>
+      <div class="stat-sub" id="statTopAmt">most spent area</div>
+      <div class="stat-bg-icon">🏆</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Avg. Transaction</div>
+    <div class="stat-card s4">
+      <div class="stat-label">Avg. per Transaction</div>
       <div class="stat-value" id="statAvg">₹0</div>
-      <div class="stat-sub">per transaction</div>
+      <div class="stat-sub">average spend</div>
+      <div class="stat-bg-icon">📊</div>
     </div>
   </div>
 
-  <!-- CHARTS + BREAKDOWN -->
-  <div class="content-grid" id="contentGrid" style="display: none;">
-    <div class="card">
-      <div class="card-title">📊 Spending by Category</div>
-      <div id="categoryBars">
-        <div class="placeholder-chart">Upload a statement to see breakdown</div>
-      </div>
+  <!-- CHARTS -->
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="chart-title"><div class="dot" style="background:var(--coral)"></div> Spending by Category</div>
+      <div id="categoryBars"></div>
     </div>
-    <div class="card">
-      <div class="card-title">🍩 Distribution</div>
-      <canvas id="donutCanvas" width="200" height="200"></canvas>
-      <div id="donutPlaceholder" class="placeholder-chart" style="display:none;">Upload to see chart</div>
+    <div class="chart-card" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="chart-title"><div class="dot" style="background:var(--violet)"></div> Distribution</div>
+      <canvas id="donutCanvas" width="220" height="220"></canvas>
     </div>
   </div>
 
   <!-- TRANSACTIONS TABLE -->
-  <div class="transactions-card" id="txCard">
-    <div class="transactions-header">
+  <div class="tx-card">
+    <div class="tx-header">
       <h3>📋 All Transactions</h3>
       <select class="filter-select" id="categoryFilter" onchange="filterTransactions()">
         <option value="all">All Categories</option>
@@ -411,13 +721,19 @@
     </div>
     <div id="txTableWrap">
       <div class="empty-state">
-        <div class="icon">🏦</div>
+        <div class="e-icon">🏦</div>
         <h3>No data yet</h3>
-        <p>Upload your bank statement above to get started</p>
+        <p>Upload your bank statement to get started</p>
       </div>
     </div>
   </div>
 </div>
+
+<!-- FOOTER -->
+<footer>
+  <p>Built with ❤️ by <strong>Sachi Sontakke</strong> · Smart Expense Analyzer · Week 1</p>
+  <p style="margin-top:0.4rem;font-size:0.78rem;">Python · Flask · PostgreSQL · Chart.js</p>
+</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
@@ -425,56 +741,57 @@
   let summaryData = [];
   let donutChart = null;
 
-  const CATEGORY_COLORS = {
-    "Food & Dining":     "#E76F51",
-    "Transport":         "#185FA5",
-    "Shopping":          "#534AB7",
-    "Education":         "#0F6E56",
-    "Health & Medicine": "#D4537E",
-    "Entertainment":     "#BA7517",
-    "Utilities & Bills": "#888780",
-    "Rent & Housing":    "#2D6A4F",
-    "Groceries":         "#52B788",
-    "Transfer & ATM":    "#7F77DD",
-    "Other":             "#B4B2A9"
+  const COLORS = {
+    "Food & Dining":     "#FF5C3A",
+    "Transport":         "#3B82F6",
+    "Shopping":          "#7C3AED",
+    "Education":         "#10B981",
+    "Health & Medicine": "#EC4899",
+    "Entertainment":     "#F59E0B",
+    "Utilities & Bills": "#6B7280",
+    "Rent & Housing":    "#0D9488",
+    "Groceries":         "#84CC16",
+    "Transfer & ATM":    "#8B5CF6",
+    "Other":             "#9CA3AF"
   };
 
   const fileInput = document.getElementById('fileInput');
-
   fileInput.addEventListener('change', () => {
-    const name = fileInput.files[0]?.name;
-    if (name) document.getElementById('uploadLabel').textContent = '📄 ' + name;
+    const f = fileInput.files[0];
+    if (f) {
+      document.getElementById('uploadLabel').textContent = 'File selected!';
+      document.getElementById('fileName').textContent = f.name;
+      document.getElementById('selectedFile').style.display = 'inline-flex';
+    }
   });
 
   const zone = document.getElementById('uploadZone');
   zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
   zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
   zone.addEventListener('drop', e => {
-    e.preventDefault();
-    zone.classList.remove('dragover');
+    e.preventDefault(); zone.classList.remove('dragover');
     if (e.dataTransfer.files[0]) {
       fileInput.files = e.dataTransfer.files;
-      document.getElementById('uploadLabel').textContent = '📄 ' + e.dataTransfer.files[0].name;
+      const f = e.dataTransfer.files[0];
+      document.getElementById('uploadLabel').textContent = 'File selected!';
+      document.getElementById('fileName').textContent = f.name;
+      document.getElementById('selectedFile').style.display = 'inline-flex';
     }
   });
 
   function setStatus(msg, type) {
     const el = document.getElementById('statusMsg');
-    el.textContent = msg;
-    el.className = 'status-msg ' + type;
+    el.textContent = msg; el.className = 'status-msg ' + type;
   }
 
   async function handleUpload(e) {
     e.stopPropagation();
     const file = fileInput.files[0];
-    if (!file) { setStatus('Please select a CSV file first.', 'error'); return; }
-
+    if (!file) { setStatus('⚠️ Please select a CSV file first.', 'error'); return; }
     const btn = document.getElementById('uploadBtn');
     btn.disabled = true;
     document.getElementById('btnText').innerHTML = '<span class="spinner"></span> Analyzing...';
-    setStatus('Uploading and categorizing transactions...', 'loading');
-
-    // Parse CSV client-side for demo (no backend needed to run the frontend)
+    setStatus('Reading and categorizing your transactions...', 'loading');
     const text = await file.text();
     parseAndDisplay(text);
   }
@@ -483,22 +800,19 @@
     const lines = text.trim().split('\n');
     const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/"/g, ''));
     const dateIdx = headers.findIndex(h => ['date'].includes(h));
-    const descIdx = headers.findIndex(h => ['description','narration','details'].includes(h));
-    const amtIdx  = headers.findIndex(h => ['amount','debit','credit'].includes(h));
-
+    const descIdx = headers.findIndex(h => ['description','narration','details','particulars'].includes(h));
+    const amtIdx  = headers.findIndex(h => ['amount','debit','credit','withdrawal'].includes(h));
     const transactions = [];
     for (let i = 1; i < lines.length; i++) {
       const cols = lines[i].split(',').map(c => c.trim().replace(/"/g, ''));
       if (cols.length < 3) continue;
-      const desc = cols[descIdx] || cols[1] || '';
-      const rawAmt = cols[amtIdx] || cols[2] || '0';
-      const amt = parseFloat(rawAmt.replace(/[₹$,]/g, '')) || 0;
+      const desc = cols[descIdx !== -1 ? descIdx : 1] || '';
+      const rawAmt = cols[amtIdx !== -1 ? amtIdx : 2] || '0';
+      const amt = parseFloat(rawAmt.replace(/[₹$,\s]/g, '')) || 0;
       if (!desc || amt === 0) continue;
       transactions.push({
-        date: cols[dateIdx] || cols[0] || '',
-        description: desc,
-        amount: Math.abs(amt),
-        category: categorize(desc)
+        date: cols[dateIdx !== -1 ? dateIdx : 0] || '',
+        description: desc, amount: Math.abs(amt), category: categorize(desc)
       });
     }
     return transactions;
@@ -507,12 +821,12 @@
   function categorize(desc) {
     const d = desc.toLowerCase();
     const rules = {
-      "Food & Dining":     ["zomato","swiggy","restaurant","cafe","food","pizza","burger","biryani","dhaba","dominos","mcdonald","kfc","subway","coffee","tea"],
-      "Transport":         ["uber","ola","rapido","auto","bus","metro","train","irctc","petrol","fuel","diesel","parking","toll","cab","taxi"],
-      "Shopping":          ["amazon","flipkart","myntra","meesho","ajio","nykaa","mall","shop","store","clothes","fashion"],
-      "Education":         ["udemy","coursera","college","university","fees","book","library","course","tuition","exam","stationary"],
+      "Food & Dining":     ["zomato","swiggy","restaurant","cafe","food","pizza","burger","biryani","dhaba","dominos","mcdonald","kfc","subway","coffee","tea","hotel"],
+      "Transport":         ["uber","ola","rapido","auto","bus","metro","train","irctc","petrol","fuel","diesel","parking","toll","cab","taxi","bike"],
+      "Shopping":          ["amazon","flipkart","myntra","meesho","ajio","nykaa","mall","shop","store","clothes","fashion","snapdeal"],
+      "Education":         ["udemy","coursera","college","university","fees","book","library","course","tuition","exam","stationary","skillshare"],
       "Health & Medicine": ["pharmacy","medicine","medical","hospital","clinic","doctor","lab","apollo","netmeds","1mg","medplus","health"],
-      "Entertainment":     ["netflix","hotstar","prime","spotify","youtube","movie","cinema","pvr","inox","game","concert","ott"],
+      "Entertainment":     ["netflix","hotstar","prime","spotify","youtube","movie","cinema","pvr","inox","game","concert","ott","disney"],
       "Utilities & Bills": ["electricity","water","gas","internet","broadband","airtel","jio","vodafone","bsnl","recharge","bill","dth"],
       "Rent & Housing":    ["rent","house","flat","apartment","pg","hostel","maintenance","society","deposit"],
       "Groceries":         ["blinkit","zepto","bigbasket","dmart","reliance fresh","grocery","vegetables","fruits","dairy","milk","rice","flour"],
@@ -526,106 +840,68 @@
 
   function parseAndDisplay(csvText) {
     const btn = document.getElementById('uploadBtn');
-
     try {
       allTransactions = parseCSV(csvText);
       if (allTransactions.length === 0) {
-        setStatus('No valid transactions found. Check your CSV format (needs Date, Description, Amount columns).', 'error');
-        btn.disabled = false;
-        document.getElementById('btnText').textContent = 'Analyze Statement';
-        return;
+        setStatus('❌ No valid transactions found. Check your CSV has Date, Description, Amount columns.', 'error');
+        btn.disabled = false; document.getElementById('btnText').textContent = '🚀 Analyze My Expenses'; return;
       }
-
-      // Build summary
       const catMap = {};
-      allTransactions.forEach(t => {
-        catMap[t.category] = (catMap[t.category] || 0) + t.amount;
-      });
-      summaryData = Object.entries(catMap)
-        .map(([category, total]) => ({ category, total }))
-        .sort((a, b) => b.total - a.total);
+      allTransactions.forEach(t => { catMap[t.category] = (catMap[t.category] || 0) + t.amount; });
+      summaryData = Object.entries(catMap).map(([category, total]) => ({ category, total })).sort((a,b) => b.total - a.total);
 
-      displayStats();
-      displayCategoryBars();
-      displayDonut();
-      populateFilter();
-      displayTable(allTransactions);
+      displayStats(); displayCategoryBars(); displayDonut(); populateFilter(); displayTable(allTransactions);
 
-      document.getElementById('statsGrid').style.display = 'grid';
-      document.getElementById('contentGrid').style.display = 'grid';
-
-      setStatus(`✅ Successfully analyzed ${allTransactions.length} transactions across ${summaryData.length} categories.`, 'success');
+      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setStatus(`✅ ${allTransactions.length} transactions analyzed across ${summaryData.length} categories!`, 'success');
     } catch (err) {
-      setStatus('Error parsing CSV: ' + err.message, 'error');
+      setStatus('❌ Error: ' + err.message, 'error');
     }
-
-    btn.disabled = false;
-    document.getElementById('btnText').textContent = 'Analyze Statement';
+    btn.disabled = false; document.getElementById('btnText').textContent = '🚀 Analyze My Expenses';
   }
 
   function displayStats() {
-    const total = allTransactions.reduce((s, t) => s + t.amount, 0);
+    const total = allTransactions.reduce((s,t) => s+t.amount, 0);
     const top = summaryData[0];
     document.getElementById('statTotal').textContent = '₹' + Math.round(total).toLocaleString('en-IN');
     document.getElementById('statCount').textContent = allTransactions.length;
     document.getElementById('statTopCat').textContent = top?.category || '—';
     document.getElementById('statTopAmt').textContent = top ? '₹' + Math.round(top.total).toLocaleString('en-IN') : '';
     document.getElementById('statAvg').textContent = '₹' + Math.round(total / allTransactions.length).toLocaleString('en-IN');
+    document.getElementById('dashTag').textContent = allTransactions.length + ' transactions';
   }
 
   function displayCategoryBars() {
     const max = summaryData[0]?.total || 1;
     const container = document.getElementById('categoryBars');
-    container.innerHTML = summaryData.slice(0, 8).map(item => {
+    container.innerHTML = summaryData.slice(0,8).map(item => {
       const pct = Math.round((item.total / max) * 100);
-      const color = CATEGORY_COLORS[item.category] || '#888';
-      return `
-        <div class="category-bar">
-          <div class="cat-row">
-            <span class="cat-name">
-              <span class="cat-dot" style="background:${color}"></span>
-              ${item.category}
-            </span>
-            <span class="cat-amount">₹${Math.round(item.total).toLocaleString('en-IN')}</span>
-          </div>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:0%;background:${color}" data-width="${pct}%"></div>
-          </div>
-        </div>`;
+      const color = COLORS[item.category] || '#888';
+      return `<div class="cat-item">
+        <div class="cat-row">
+          <span class="cat-name"><span class="cat-dot" style="background:${color}"></span>${item.category}</span>
+          <span class="cat-amt">₹${Math.round(item.total).toLocaleString('en-IN')}</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:0%;background:${color}" data-width="${pct}%"></div></div>
+      </div>`;
     }).join('');
-
-    setTimeout(() => {
-      document.querySelectorAll('.bar-fill').forEach(el => {
-        el.style.width = el.dataset.width;
-      });
-    }, 50);
+    setTimeout(() => { document.querySelectorAll('.bar-fill').forEach(el => { el.style.width = el.dataset.width; }); }, 50);
   }
 
   function displayDonut() {
-    const canvas = document.getElementById('donutCanvas');
     if (donutChart) donutChart.destroy();
-
-    donutChart = new Chart(canvas, {
+    donutChart = new Chart(document.getElementById('donutCanvas'), {
       type: 'doughnut',
       data: {
         labels: summaryData.map(d => d.category),
-        datasets: [{
-          data: summaryData.map(d => Math.round(d.total)),
-          backgroundColor: summaryData.map(d => CATEGORY_COLORS[d.category] || '#888'),
-          borderWidth: 2,
-          borderColor: '#fff'
-        }]
+        datasets: [{ data: summaryData.map(d => Math.round(d.total)), backgroundColor: summaryData.map(d => COLORS[d.category] || '#888'), borderWidth: 3, borderColor: '#fff' }]
       },
       options: {
-        responsive: true,
-        cutout: '65%',
+        responsive: true, cutout: '68%',
         plugins: {
           legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: ctx => ` ₹${ctx.raw.toLocaleString('en-IN')}`
-            }
-          }
+          tooltip: { callbacks: { label: ctx => ` ₹${ctx.raw.toLocaleString('en-IN')}` } }
         }
       }
     });
@@ -634,86 +910,37 @@
   function populateFilter() {
     const select = document.getElementById('categoryFilter');
     const cats = [...new Set(allTransactions.map(t => t.category))].sort();
-    select.innerHTML = '<option value="all">All Categories</option>' +
-      cats.map(c => `<option value="${c}">${c}</option>`).join('');
+    select.innerHTML = '<option value="all">All Categories</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
   }
 
   function filterTransactions() {
     const cat = document.getElementById('categoryFilter').value;
-    const filtered = cat === 'all' ? allTransactions : allTransactions.filter(t => t.category === cat);
-    displayTable(filtered);
+    displayTable(cat === 'all' ? allTransactions : allTransactions.filter(t => t.category === cat));
   }
 
   function displayTable(transactions) {
     const wrap = document.getElementById('txTableWrap');
-    if (transactions.length === 0) {
-      wrap.innerHTML = '<div class="empty-state"><div class="icon">🔍</div><h3>No transactions match</h3><p>Try a different filter</p></div>';
-      return;
+    if (!transactions.length) {
+      wrap.innerHTML = '<div class="empty-state"><div class="e-icon">🔍</div><h3>No transactions match</h3><p>Try a different filter</p></div>'; return;
     }
-
-    const rows = transactions.map(t => {
-      const color = CATEGORY_COLORS[t.category] || '#888';
-      const bgHex = color + '22';
-      return `
-        <tr>
+    wrap.innerHTML = `<table><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th></tr></thead><tbody>
+      ${transactions.map(t => {
+        const color = COLORS[t.category] || '#888';
+        return `<tr>
           <td class="td-date">${t.date}</td>
           <td class="td-desc">${t.description}</td>
-          <td><span class="badge" style="background:${bgHex};color:${color}">${t.category}</span></td>
+          <td><span class="badge" style="background:${color}22;color:${color}">${t.category}</span></td>
           <td class="td-amount">₹${Math.round(t.amount).toLocaleString('en-IN')}</td>
         </tr>`;
-    }).join('');
-
-    wrap.innerHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>`;
+      }).join('')}
+    </tbody></table>`;
   }
 
   function downloadSample(e) {
     e.preventDefault();
-    const csv = `Date,Description,Amount
-2026-01-02,Zomato Order - Biryani,320
-2026-01-03,Amazon Purchase - Headphones,1499
-2026-01-04,Uber Ride to College,85
-2026-01-05,Udemy Python Course,499
-2026-01-06,Netflix Subscription,199
-2026-01-07,Blinkit Grocery Order,645
-2026-01-08,Airtel Mobile Recharge,299
-2026-01-09,ATM Withdrawal,2000
-2026-01-10,Swiggy Food Order,275
-2026-01-11,Apollo Pharmacy,380
-2026-01-12,Ola Cab Ride,120
-2026-01-13,Flipkart Shopping,899
-2026-01-14,Zomato Order - Pizza,450
-2026-01-15,Petrol Station,600
-2026-01-16,College Fees Payment,5000
-2026-01-17,PVR Cinema Ticket,250
-2026-01-18,BigBasket Grocery,820
-2026-01-19,Uber Ride,95
-2026-01-20,Electricity Bill,750
-2026-01-21,Rent Payment,6000
-2026-01-22,Swiggy Order,310
-2026-01-23,Amazon Shopping,1200
-2026-01-24,Spotify Premium,119
-2026-01-25,Rapido Bike Ride,45
-2026-01-26,Zepto Groceries,390
-2026-01-27,Restaurant Dinner,680
-2026-01-28,UPI Transfer to Friend,500
-2026-01-29,Medplus Pharmacy,215
-2026-01-30,Jio Broadband Bill,399`;
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'sample_transactions.csv';
-    a.click();
+    const csv = `Date,Description,Amount\n2026-01-02,Zomato Order - Biryani,320\n2026-01-03,Amazon Purchase - Headphones,1499\n2026-01-04,Uber Ride to College,85\n2026-01-05,Udemy Python Course,499\n2026-01-06,Netflix Subscription,199\n2026-01-07,Blinkit Grocery Order,645\n2026-01-08,Airtel Mobile Recharge,299\n2026-01-09,ATM Withdrawal,2000\n2026-01-10,Swiggy Food Order,275\n2026-01-11,Apollo Pharmacy,380\n2026-01-12,Ola Cab Ride,120\n2026-01-13,Flipkart Shopping,899\n2026-01-14,Zomato Order - Pizza,450\n2026-01-15,Petrol Station,600\n2026-01-16,College Fees Payment,5000\n2026-01-17,PVR Cinema Ticket,250\n2026-01-18,BigBasket Grocery,820\n2026-01-19,Uber Ride,95\n2026-01-20,Electricity Bill,750\n2026-01-21,Rent Payment,6000\n2026-01-22,Swiggy Order,310\n2026-01-23,Amazon Shopping,1200\n2026-01-24,Spotify Premium,119\n2026-01-25,Rapido Bike Ride,45\n2026-01-26,Zepto Groceries,390\n2026-01-27,Restaurant Dinner,680\n2026-01-28,UPI Transfer to Friend,500\n2026-01-29,Medplus Pharmacy,215\n2026-01-30,Jio Broadband Bill,399`;
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+    a.download = 'sample_transactions.csv'; a.click();
   }
 </script>
 </body>
